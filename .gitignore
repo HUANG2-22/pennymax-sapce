@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.vercel
+vercel-env.d.ts
+
+# misc
+.DS_Store
+
