@@ -17,7 +17,7 @@ export function GallerySection() {
 
   const filteredItems = useMemo(() => {
     if (filter === "all") return gallery.items;
-    return gallery.items.filter((it) => it.categories.includes(filter));
+    return gallery.items.filter((it: any) => it.categories.includes(filter as any));
   }, [filter]);
 
   const [openItem, setOpenItem] = useState<GalleryItem | null>(null);
