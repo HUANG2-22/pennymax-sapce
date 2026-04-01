@@ -170,8 +170,8 @@ export function InteractionHero() {
               </span>
             </a>
 
-            <div className="text-xs text-fog/50">
-              {lang === "zh" ? "实时渲染流占位，可替换为 TouchDesigner/Blender 视频或 URL。" : "Real-time render stream placeholder—swap with TouchDesigner/Blender video or URL later."}
+            <div className="max-w-md text-xs leading-relaxed text-fog/55 italic">
+              {current.hero.atmosphere}
             </div>
           </div>
         </div>

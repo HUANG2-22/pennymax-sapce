@@ -90,7 +90,7 @@ export function ArchiveSection() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <div className="text-xs tracking-widest text-cyan-200/70">
-                {lang === "zh" ? "( ) 荣誉 / 奖项" : "( ) Awards"}
+                {lang === "zh" ? "奖项" : "Awards"}
               </div>
               <ul className="mt-3 list-disc pl-5 text-sm text-fog/70">
                 {archive.honors.awards[lang].map((a) => (
@@ -100,7 +100,7 @@ export function ArchiveSection() {
             </div>
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <div className="text-xs tracking-widest text-cyan-200/70">
-                {lang === "zh" ? "( ) 语言" : "( ) Languages"}
+                {lang === "zh" ? "语言" : "Languages"}
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {archive.honors.languages[lang].map((l) => (

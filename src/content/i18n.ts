@@ -15,6 +15,8 @@ export const ui = {
       title: "JINPEI HUANG (MAX PENNY)",
       subtitle: "PhD in Imaging Engineering & Digital Artist",
       cta: "Scroll to Explore",
+      atmosphere:
+        "Where pixels dance as stardust, algorithms guide as constellations.",
     },
     archive: {
       title: "Archive",
@@ -67,6 +69,7 @@ export const ui = {
       title: "JINPEI HUANG (MAX PENNY)",
       subtitle: "影像工程博士 & 数字艺术家",
       cta: "向下探索",
+      atmosphere: "像素如微尘起舞，算法似星辰引路。",
     },
     archive: {
       title: "履历",

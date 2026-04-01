@@ -30,21 +30,15 @@ export function Topbar() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div className="mx-auto max-w-6xl px-4 pt-4">
-        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/30 px-3 py-3 backdrop-blur">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-              <span className="text-sm tracking-widest text-cyan-200">[ LOGO: JP.H ]</span>
-            </div>
-          </div>
-
-          <nav className="hidden items-center gap-1 sm:flex">
+        <div className="flex w-full items-center gap-6 rounded-2xl border border-white/10 bg-black/30 px-3 py-3 backdrop-blur md:gap-8 lg:gap-10">
+          <nav className="hidden min-w-0 flex-1 items-center justify-evenly sm:flex">
             <NavLink href="#archive">{current.nav.archive}</NavLink>
             <NavLink href="#gallery">{current.nav.gallery}</NavLink>
             <NavLink href="#lab">{current.nav.lab}</NavLink>
             <NavLink href="#contact">{current.nav.contact}</NavLink>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="ml-auto flex shrink-0 items-center sm:ml-0">
             <LanguageToggle />
           </div>
         </div>
