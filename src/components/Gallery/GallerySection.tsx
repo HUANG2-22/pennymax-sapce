@@ -34,8 +34,8 @@ export function GallerySection() {
           </h2>
           <p className="mt-2 text-sm text-fog/60">
             {lang === "zh"
-              ? "按类型筛选：视频 / 图像 / 新媒体交互。"
-              : "Filter by type: Video / Photography / New Media Interaction."}
+              ? "按类型筛选：视频 · 图像 · 新媒体交互 · 展览经历汇总"
+              : "Filter by type: Video · Photography · New Media Interaction · Exhibition roundup"}
           </p>
         </div>
 

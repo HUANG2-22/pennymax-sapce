@@ -15,6 +15,11 @@ export type GalleryMedia =
       poster?: string;
     }
   | {
+      /** Bilibili web player (iframe); use https URL */
+      type: "bilibili";
+      embedSrc: string;
+    }
+  | {
       type: "images";
       images: { src: string; alt: BiString }[];
     };
@@ -136,9 +141,9 @@ export const gallery = {
       coverImage: "/gallery/video/neobody_cover.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/Neobody.mp4",
-          poster: "/gallery/video/neobody_cover.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338584457517&bvid=BV1ZQ9PBrEz4&cid=37195352471&p=1",
         },
       ],
       links: [],
@@ -167,9 +172,9 @@ export const gallery = {
       coverImage: "/gallery/video/girl_fish_concept.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/The%20Girl%20and%20Fish.mp4",
-          poster: "/gallery/video/girl_fish_concept.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338567813245&bvid=BV1HW9NBDES4&cid=37195350923&p=1",
         },
       ],
       links: [],
@@ -198,9 +203,9 @@ export const gallery = {
       coverImage: "/gallery/video/Map%20Cover.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/Here,%20There-I.mp4",
-          poster: "/gallery/video/Map%20Cover.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338584457487&bvid=BV1ZQ9PBrEBQ&cid=37195550095&p=1",
         },
       ],
       links: [],
@@ -229,9 +234,9 @@ export const gallery = {
       coverImage: "/gallery/video/Digital%20Chinese%20Paper%20Cutting%20Cover.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/Digital%20Chinese%20Paper%20Cutting.mp4",
-          poster: "/gallery/video/Digital%20Chinese%20Paper%20Cutting%20Cover.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338584589595&bvid=BV1BQ9PBkE7C&cid=37195482716&p=1",
         },
       ],
       links: [],
@@ -260,9 +265,9 @@ export const gallery = {
       coverImage: "/gallery/video/Meta-Voice%20Cover.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/Meta-Voice.mp4",
-          poster: "/gallery/video/Meta-Voice%20Cover.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338584525314&bvid=BV17Q9PBkEvf&cid=37195615308&p=1",
         },
       ],
       links: [],
@@ -291,9 +296,9 @@ export const gallery = {
       coverImage: "/gallery/video/Stick%20Man%20Cover.png",
       media: [
         {
-          type: "video",
-          src: "/gallery/video/Stick%20Man.mp4",
-          poster: "/gallery/video/Stick%20Man%20Cover.png",
+          type: "bilibili",
+          embedSrc:
+            "https://player.bilibili.com/player.html?isOutside=true&aid=116338567745939&bvid=BV1AW9NBDEFq&cid=37195680791&p=1",
         },
       ],
       links: [],

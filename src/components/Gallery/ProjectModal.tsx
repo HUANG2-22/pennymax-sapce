@@ -5,6 +5,81 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { GalleryItem, InteractionModalExtra, GalleryCategory } from "@/content/gallery";
 import { useI18n } from "@/components/i18n/I18nProvider";
 
+function bilibiliWatchPageUrl(embedSrc: string): string | null {
+  try {
+    const u = new URL(embedSrc);
+    const bvid = u.searchParams.get("bvid");
+    if (bvid) return `https://www.bilibili.com/video/${bvid}`;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+/** Prefer full web controls: no autoplay, widescreen, HQ, hide danmaku bar clutter */
+function buildBilibiliEmbedSrc(raw: string): string {
+  try {
+    const u = new URL(raw);
+    u.searchParams.set("autoplay", "0");
+    u.searchParams.set("danmaku", "0");
+    u.searchParams.set("high_quality", "1");
+    u.searchParams.set("as_wide", "1");
+    return u.toString();
+  } catch {
+    return raw;
+  }
+}
+
+function BilibiliPlayerBlock({
+  embedSrc,
+  titleEn,
+  lang,
+}: {
+  embedSrc: string;
+  titleEn: string;
+  lang: "en" | "zh";
+}) {
+  const src = buildBilibiliEmbedSrc(embedSrc);
+  const openBili = bilibiliWatchPageUrl(embedSrc);
+  return (
+    <div className="space-y-2">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-[0_0_0_1px_rgba(255,255,255,0.06)]">
+        {/* Taller than strict 16:9 at narrow widths so B站底部进度条/清晰度栏能露出来；可滚动卡片避免裁切 */}
+        <div
+          className="relative w-full bg-black"
+          style={{
+            height: "clamp(320px, min(56.25vw, 68vh), 580px)",
+          }}
+        >
+          <iframe
+            title={`Bilibili — ${titleEn}`}
+            src={src}
+            className="absolute inset-0 h-full w-full border-0"
+            allowFullScreen
+            scrolling="no"
+            referrerPolicy="no-referrer"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write; web-share"
+          />
+        </div>
+      </div>
+      {openBili ? (
+        <p className="text-center text-xs leading-relaxed text-fog/55">
+          <a
+            href={openBili}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 underline-offset-2 hover:text-sky-300 hover:underline"
+          >
+            {lang === "zh"
+              ? "若内嵌控件不完整，可在哔哩哔哩新窗口中观看（含完整进度与清晰度）"
+              : "For full controls (progress & quality), open on Bilibili"}
+          </a>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function categoryLine(categories: GalleryCategory[], lang: "en" | "zh") {
   const zh: Record<GalleryCategory, string> = {
     video: "视频",
@@ -110,6 +185,22 @@ export function ProjectModal({
 }) {
   const { lang } = useI18n();
 
+  const biliMedia =
+    item?.media?.filter((m) => m.type === "bilibili") ?? [];
+  const videoPlayerFirst =
+    Boolean(item?.categories.includes("video")) && biliMedia.length > 0;
+  const mediaRest =
+    item?.media?.filter(
+      (m) => !(videoPlayerFirst && m.type === "bilibili")
+    ) ?? [];
+
+  const modalMaxClass =
+    biliMedia.length > 0
+      ? "max-w-5xl"
+      : item?.interactionDemo
+        ? "max-w-4xl"
+        : "max-w-3xl";
+
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
@@ -132,22 +223,20 @@ export function ProjectModal({
         >
           <button
             type="button"
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 z-0 bg-black/60"
             onClick={onClose}
             aria-label="Close modal"
           />
 
           <motion.div
-            className={`relative mx-auto mt-16 w-full px-4 ${
-              item.interactionDemo ? "max-w-4xl" : "max-w-3xl"
-            }`}
+            className={`relative z-10 mx-auto mt-12 w-full px-4 sm:mt-14 ${modalMaxClass}`}
             initial={{ y: 24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 24, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="rounded-3xl border border-white/10 bg-black/70 p-6 backdrop-blur">
-              <div className="flex items-start justify-between gap-4">
+            <div className="flex max-h-[calc(100vh-3rem)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/70 backdrop-blur sm:max-h-[calc(100vh-2.5rem)]">
+              <div className="flex shrink-0 items-start justify-between gap-4 border-b border-white/[0.08] px-5 py-4 sm:px-6 sm:py-5">
                 <div>
                   <div className="text-xs tracking-widest text-cyan-200/80">
                     {categoryLine(item.categories, lang)}
@@ -167,112 +256,132 @@ export function ProjectModal({
                 </button>
               </div>
 
-              <p className="mt-4 text-sm leading-relaxed text-fog/80">
-                {item.description[lang]}
-              </p>
-
-              {item.interactionDemo ? (
-                <p className="mt-3 text-sm leading-relaxed">
-                  <a
-                    href={item.interactionDemo.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-sky-400 hover:text-sky-300"
-                  >
-                    {lang === "zh"
-                      ? item.interactionDemo.linkZh
-                      : item.interactionDemo.linkEn}
-                  </a>
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 py-4 sm:px-6 sm:py-5">
+                <p className="text-sm leading-relaxed text-fog/80">
+                  {item.description[lang]}
                 </p>
-              ) : null}
 
-              {item.interactionDemo?.extras ? (
-                <InteractionExtraMedia extra={item.interactionDemo.extras} />
-              ) : null}
+                <div className="mt-4 grid gap-3 sm:mt-5 md:grid-cols-2">
+                  {item.details[lang].map((d) => (
+                    <div
+                      key={d}
+                      className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-fog/75"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
 
-              {item.media?.length ? (
-                <div className="mt-6 space-y-4">
-                  {item.media.map((m, idx) => {
-                    if (m.type === "video") {
+                {videoPlayerFirst ? (
+                  <div className="mt-5 space-y-6 sm:mt-6">
+                    {biliMedia.map((m, idx) =>
+                      m.type === "bilibili" ? (
+                        <BilibiliPlayerBlock
+                          key={`bili-${idx}`}
+                          embedSrc={m.embedSrc}
+                          titleEn={item.title.en}
+                          lang={lang}
+                        />
+                      ) : null,
+                    )}
+                  </div>
+                ) : null}
+
+                {item.interactionDemo ? (
+                  <p className="mt-6 text-sm leading-relaxed">
+                    <a
+                      href={item.interactionDemo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-medium text-sky-400 hover:text-sky-300"
+                    >
+                      {lang === "zh"
+                        ? item.interactionDemo.linkZh
+                        : item.interactionDemo.linkEn}
+                    </a>
+                  </p>
+                ) : null}
+
+                {item.interactionDemo?.extras ? (
+                  <InteractionExtraMedia extra={item.interactionDemo.extras} />
+                ) : null}
+
+                {mediaRest.length ? (
+                  <div className="mt-6 space-y-4">
+                    {mediaRest.map((m, idx) => {
+                      if (m.type === "video") {
+                        return (
+                          <div
+                            key={`${m.type}-${idx}`}
+                            className="overflow-hidden rounded-2xl border border-white/10 bg-black/40"
+                          >
+                            <video
+                              controls
+                              playsInline
+                              preload="metadata"
+                              poster={m.poster}
+                              className="h-auto w-full"
+                            >
+                              <source src={m.src} />
+                            </video>
+                          </div>
+                        );
+                      }
+
+                      if (m.type === "bilibili") {
+                        return (
+                          <BilibiliPlayerBlock
+                            key={`${m.type}-${idx}`}
+                            embedSrc={m.embedSrc}
+                            titleEn={item.title.en}
+                            lang={lang}
+                          />
+                        );
+                      }
+
                       return (
                         <div
                           key={`${m.type}-${idx}`}
-                          className="overflow-hidden rounded-2xl border border-white/10 bg-black/40"
+                          className="grid gap-3 md:grid-cols-2"
                         >
-                          <video
-                            controls
-                            playsInline
-                            preload="metadata"
-                            poster={m.poster}
-                            className="h-auto w-full"
-                          >
-                            <source src={m.src} />
-                          </video>
+                          {m.images.map((img) => (
+                            <a
+                              key={img.src}
+                              href={img.src}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="group overflow-hidden rounded-2xl border border-white/10 bg-black/40"
+                            >
+                              <img
+                                src={img.src}
+                                alt={img.alt[lang]}
+                                className="h-44 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                                loading="lazy"
+                              />
+                            </a>
+                          ))}
                         </div>
                       );
-                    }
-
-                    return (
-                      <div
-                        key={`${m.type}-${idx}`}
-                        className="grid gap-3 md:grid-cols-2"
-                      >
-                        {m.images.map((img) => (
-                          <a
-                            key={img.src}
-                            href={img.src}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="group overflow-hidden rounded-2xl border border-white/10 bg-black/40"
-                          >
-                            <img
-                              src={img.src}
-                              alt={img.alt[lang]}
-                              className="h-44 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-                              loading="lazy"
-                            />
-                          </a>
-                        ))}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
-
-              {item.links?.length ? (
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {item.links.map((l) => (
-                    <a
-                      key={l.url}
-                      href={l.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs tracking-widest text-fog/75 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50"
-                    >
-                      {l.label[lang]}
-                    </a>
-                  ))}
-                </div>
-              ) : null}
-
-              <div className="mt-6 grid gap-3 md:grid-cols-2">
-                {item.details[lang].map((d) => (
-                  <div
-                    key={d}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-fog/75"
-                  >
-                    {d}
+                    })}
                   </div>
-                ))}
-              </div>
+                ) : null}
 
-              {!item.interactionDemo ? (
-                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-fog/55">
-                  {lang === "zh"
-                    ? "提示：你可以在作品条目里加入视频、图集，以及外部链接（报道/制作过程等）。"
-                    : "Tip: each project can include video, image sets, and external links (press, making-of, etc.)."}
-                </div>
-              ) : null}
+                {item.links?.length ? (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {item.links.map((l) => (
+                      <a
+                        key={l.url}
+                        href={l.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs tracking-widest text-fog/75 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50"
+                      >
+                        {l.label[lang]}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </motion.div>
         </motion.div>
