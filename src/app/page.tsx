@@ -15,9 +15,9 @@ export default function Page() {
       <Topbar />
       <main className="pt-24">
         <InteractionHero />
-        <ArchiveSection />
         <GallerySection />
         <LabSection />
+        <ArchiveSection />
         <ContactSection />
         <Footer />
       </main>

@@ -32,9 +32,9 @@ export function Topbar() {
       <div className="mx-auto max-w-6xl px-4 pt-4">
         <div className="flex w-full items-center gap-6 rounded-2xl border border-white/10 bg-black/30 px-3 py-3 backdrop-blur md:gap-8 lg:gap-10">
           <nav className="hidden min-w-0 flex-1 items-center justify-evenly sm:flex">
-            <NavLink href="#archive">{current.nav.archive}</NavLink>
             <NavLink href="#gallery">{current.nav.gallery}</NavLink>
             <NavLink href="#lab">{current.nav.lab}</NavLink>
+            <NavLink href="#archive">{current.nav.archive}</NavLink>
             <NavLink href="#contact">{current.nav.contact}</NavLink>
           </nav>
 

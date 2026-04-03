@@ -29,7 +29,7 @@ export function LabSection() {
     const run = async () => {
       setRepoState("loading");
       try {
-        const res = await fetch("/api/github/repos?limit=6");
+        const res = await fetch("/api/github/repos?limit=100");
         const json = (await res.json()) as {
           ok: boolean;
           reason?: string;
@@ -61,26 +61,19 @@ export function LabSection() {
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             {current.lab.title}
           </h2>
-          <p className="mt-2 text-sm text-fog/60">
-            {lang === "zh"
-              ? "GitHub 实时联动 + 科研成果 + 工具箱。"
-              : "Live GitHub linkage + publications + toolkits."}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-fog/60">
-          Lab Signal // 03
+          <p className="mt-2 text-sm text-fog/60">{current.lab.subLine}</p>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-            <div className="mb-4 text-sm tracking-widest text-cyan-200/80">
+      <div className="mt-8 grid gap-4 lg:grid-cols-3 lg:items-stretch">
+        <div className="flex min-h-0 lg:col-span-2">
+          <div className="flex h-full w-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+            <div className="mb-4 shrink-0 text-sm tracking-widest text-cyan-200/80">
               {current.lab.liveRepos}
             </div>
 
             {repoState !== "ready" ? (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid flex-1 gap-3 sm:grid-cols-2 sm:content-start">
                 {Array.from({ length: 6 }).map((_, idx) => (
                   <div
                     key={idx}
@@ -90,89 +83,78 @@ export function LabSection() {
               </div>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
-                {repos.map((r) => (
-                  <div
-                    key={r.name}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-4"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium text-fog/90">
-                          {r.html_url ? (
+                {repos.map((r) => {
+                  const codeUrl =
+                    r.html_url ||
+                    `https://github.com/${lab.githubUsername}/${encodeURIComponent(r.name)}`;
+                  return (
+                    <div
+                      key={r.name}
+                      className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="truncate text-sm font-medium text-fog/90">
                             <a
-                              href={r.html_url}
+                              href={codeUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="hover:underline"
                             >
                               {r.name}
                             </a>
-                          ) : (
-                            r.name
-                          )}
+                          </div>
+                          <div className="mt-1 text-xs text-fog/60">
+                            {r.language ? `Lang: ${r.language}` : "Lang: —"}
+                          </div>
                         </div>
-                        <div className="mt-1 text-xs text-fog/60">
-                          {r.language ? `Lang: ${r.language}` : "Lang: —"}
-                        </div>
+                        <div className="h-9 w-9 shrink-0 rounded-xl border border-white/10 bg-white/5" />
                       </div>
-                      <div className="h-9 w-9 rounded-xl border border-white/10 bg-white/5" />
+                      <div className="mt-3 line-clamp-3 text-sm text-fog/70">
+                        {r.description || "—"}
+                      </div>
+                      {r.pushed_at ? (
+                        <div className="mt-2 text-xs text-fog/50">
+                          {new Date(r.pushed_at).toLocaleDateString()}
+                        </div>
+                      ) : null}
                     </div>
-                    <div className="mt-3 line-clamp-2 text-sm text-fog/70">
-                      {r.description || (lang === "zh" ? "占位说明" : "Placeholder description")}
-                    </div>
-                    <div className="mt-3 text-xs text-fog/50">
-                      {r.pushed_at
-                        ? new Date(r.pushed_at).toLocaleDateString()
-                        : lang === "zh"
-                          ? "—"
-                          : "—"}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
-            {repoOk === false && (
-              <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-fog/70">
+            {repoOk === false ? (
+              <div className="mt-4 shrink-0 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-fog/70">
                 {current.lab.githubUnavailable}
-                {repoReason ? <span className="block mt-2 text-fog/55">({repoReason})</span> : null}
+                {repoReason ? (
+                  <span className="mt-2 block text-fog/55">({repoReason})</span>
+                ) : null}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
-        <div className="lg:col-span-1">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-            <div className="text-sm tracking-widest text-cyan-200/80">
+        <div className="flex min-h-0 lg:col-span-1">
+          <div className="flex h-full w-full flex-col rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+            <div className="shrink-0 text-sm tracking-widest text-cyan-200/80">
               {current.lab.publications}
             </div>
-            <div className="mt-4 space-y-3">
+            <div className="mt-4 min-h-0 flex-1 space-y-4">
               {lab.publications.map((p) => (
                 <div
                   key={p.id}
                   className="rounded-2xl border border-white/10 bg-black/20 p-4"
                 >
-                  <div className="text-xs tracking-widest text-fog/55">
-                    {p.outlet}
+                  <div className="text-sm font-medium leading-snug text-fog/90">
+                    {p.title}
                   </div>
-                  <div className="mt-2 text-sm text-fog/85">
-                    {p.title[lang]}
+                  <div className="mt-2 text-xs leading-relaxed text-fog/65">
+                    <span className="text-fog/75">{p.journal}</span>
+                    <span className="mx-1.5 text-fog/40">·</span>
+                    <span>{p.year}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            <div className="mt-6 text-sm tracking-widest text-cyan-200/80">
-              {current.lab.toolkits}
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {lab.toolkits.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-fog/75"
-                >
-                  {t}
-                </span>
               ))}
             </div>
           </div>
@@ -181,4 +163,3 @@ export function LabSection() {
     </section>
   );
 }
-

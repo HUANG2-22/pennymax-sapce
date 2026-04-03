@@ -1,4 +1,19 @@
 export const lab = {
+  /** Default GitHub username for public repo listing (Code tab = repo root URL). */
+  githubUsername: "HUANG2-22",
+
+  /** Repo `name` values (case-insensitive) to hide from the public list. */
+  githubRepoBlocklist: [
+    "max-penny",
+    "pennymax.sapce",
+    "pennymax-sapce",
+    "pennymax.space",
+    "penny-web-3",
+    "space",
+    "penny-web-2",
+    "robot-face-processing",
+  ],
+
   placeholdersRepos: [
     {
       name: "cv-lab",
@@ -16,32 +31,42 @@ export const lab = {
       language: "Python",
     },
   ],
+
+  /** Title, venue, and year only (English in both UI languages). */
   publications: [
     {
-      id: "nature-comm",
-      outlet: "Nature Communications",
-      title: {
-        en: "Agent-based autonomous design of metal-oxide frameworks",
-        zh: "基于智能体的金属氧化物框架自主设计",
-      },
+      id: "kscg-2024",
+      title:
+        "Exploring the Impact of Generative AI Tools and Platforms on Digital Art Students",
+      journal: "Journal of Computer Games and Contents",
+      year: "2024",
     },
     {
-      id: "angewandte",
-      outlet: "Angewandte Chemie",
-      title: {
-        en: "Progressive learning guidance for single-atom catalyst discovery",
-        zh: "渐进式学习引导的单原子催化剂发现",
-      },
+      id: "kotpm-2023",
+      title:
+        "A Study on the Synesthesia Expression of Sound Visualization in New Media Art",
+      journal: "The Treatise on The Plastic Media",
+      year: "2023",
     },
     {
-      id: "art-students",
-      outlet: "Paper",
-      title: {
-        en: "A study on how generative AI tools impact art students",
-        zh: "论文：生成式 AI 工具对艺术学生影响的研究",
-      },
+      id: "mint-2024",
+      title: "Animation production pipeline using AI research",
+      journal: "Moving Image & Technology (MINT)",
+      year: "2024",
+    },
+    {
+      id: "nat-comm-submitted",
+      title:
+        "Intelligence Agent Driven Autonomous Design of Dynamically Reconstructed Metal-Organic Frameworks Toward Industrial-level Anion Exchange Membrane Water Electrolysis",
+      journal: "Nature Communications",
+      year: "Submitted",
+    },
+    {
+      id: "angew-2025",
+      title:
+        "Progressive Learning-Guided Discovery of Single-Atom Metal Oxide Catalysts for Acidic Oxygen Evolution Reaction",
+      journal: "Angewandte Chemie International Edition",
+      year: "2025",
     },
   ],
-  toolkits: ["ML/CV", "PyTorch", "TouchDesigner", "Unity/Game Interaction"],
 };
-

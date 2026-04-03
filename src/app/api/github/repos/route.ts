@@ -2,12 +2,23 @@ import { lab } from "@/content/lab";
 
 export const revalidate = 3600;
 
+const DEFAULT_GITHUB_USER = lab.githubUsername;
+
+const REPO_BLOCK = new Set(
+  lab.githubRepoBlocklist.map((n) => n.toLowerCase())
+);
+
+function isRepoBlocked(name: string) {
+  return REPO_BLOCK.has(name.toLowerCase());
+}
+
 type Repo = {
   name: string;
   description: string | null;
   language: string | null;
   html_url: string | null;
   pushed_at: string | null;
+  private?: boolean;
 };
 
 function placeholders(): Repo[] {
@@ -24,19 +35,12 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const limit = Math.max(
     1,
-    Math.min(24, Number(url.searchParams.get("limit") || "6"))
+    Math.min(100, Number(url.searchParams.get("limit") || "100"))
   );
 
-  const username = process.env.GITHUB_USERNAME;
+  const username =
+    process.env.GITHUB_USERNAME?.trim() || DEFAULT_GITHUB_USER;
   const token = process.env.GITHUB_TOKEN;
-
-  if (!username) {
-    return Response.json({
-      ok: false,
-      reason: "Missing GITHUB_USERNAME",
-      repos: placeholders(),
-    });
-  }
 
   try {
     const headers: Record<string, string> = {
@@ -61,6 +65,7 @@ export async function GET(req: Request) {
 
     const data = (await gh.json()) as Repo[];
     const repos = data
+      .filter((r) => !r.private && !isRepoBlocked(r.name))
       .slice(0, limit)
       .map((r) => ({
         name: r.name,

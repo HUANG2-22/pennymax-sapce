@@ -143,25 +143,25 @@ export function InteractionHero() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/70" />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-20">
+      <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:pt-14">
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-cyan-300/90 shadow-neon" />
             <span className="text-xs tracking-widest text-cyan-200/90">
-              Interaction Signal
+              Make it Happen
             </span>
           </div>
 
-          <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">
             {current.hero.title}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-fog/80 sm:text-lg">
+          <p className="mt-3 text-sm leading-relaxed text-fog/65 sm:text-base">
             {current.hero.subtitle}
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <a
-              href="#archive"
+              href="#gallery"
               className="inline-flex items-center justify-center rounded-2xl border border-white/12 bg-white/5 px-5 py-3 text-sm text-fog/95 shadow-[0_0_0_1px_rgba(255,255,255,0.06)] transition hover:bg-white/10 hover:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50"
             >
               {current.hero.cta}
@@ -170,7 +170,7 @@ export function InteractionHero() {
               </span>
             </a>
 
-            <div className="max-w-md text-xs leading-relaxed text-fog/55 italic">
+            <div className="max-w-md text-sm leading-relaxed text-fog/65 sm:text-base">
               {current.hero.atmosphere}
             </div>
           </div>

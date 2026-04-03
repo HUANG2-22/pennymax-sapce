@@ -5,11 +5,24 @@ import { ui } from "@/content/i18n";
 import { archive } from "@/content/archive";
 import { useI18n } from "@/components/i18n/I18nProvider";
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionCard({
+  title,
+  children,
+  className,
+  bodyClassName = "space-y-3",
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+  /** Layout for card body (e.g. education uses vertical distribution). */
+  bodyClassName?: string;
+}) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-      <div className="mb-3 text-sm tracking-widest text-cyan-200/80">{title}</div>
-      <div className="space-y-3">{children}</div>
+    <div
+      className={`flex h-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur ${className ?? ""}`}
+    >
+      <div className="mb-3 shrink-0 text-sm tracking-widest text-cyan-200/80">{title}</div>
+      <div className={`min-h-0 flex-1 ${bodyClassName}`}>{children}</div>
     </div>
   );
 }
@@ -27,18 +40,19 @@ export function ArchiveSection() {
           </h2>
           <p className="mt-2 text-sm text-fog/60">
             {lang === "zh"
-              ? "教育、里程碑与荣誉语言。"
-              : "Education, milestones, and honors/skills."}
+              ? "教育、内容创作经历与荣誉语言技能。"
+              : "Education, content creation experience, and honors & language skills."}
           </p>
-        </div>
-        <div className="hidden sm:block rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-fog/60">
-          Archive Signal // 01
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <SectionCard title={current.archive.education}>
+      <div className="mt-8 grid gap-4 lg:grid-cols-3 lg:items-stretch">
+        <div className="flex min-h-0 lg:col-span-1">
+          <SectionCard
+            title={current.archive.education}
+            className="w-full"
+            bodyClassName="flex min-h-0 flex-1 flex-col justify-between gap-6"
+          >
             {archive.education.map((e) => (
               <div
                 key={`${e.period.en}-${e.title.en}`}
@@ -51,20 +65,25 @@ export function ArchiveSection() {
                   {e.title[lang]}
                 </div>
                 <div className="mt-1 text-sm text-fog/70">{e.org[lang]}</div>
+                {"coursework" in e && e.coursework ? (
+                  <p className="mt-3 border-t border-white/10 pt-3 text-xs leading-relaxed text-fog/60">
+                    {e.coursework[lang]}
+                  </p>
+                ) : null}
               </div>
             ))}
           </SectionCard>
         </div>
 
-        <div className="lg:col-span-2">
-          <SectionCard title={current.archive.milestones}>
+        <div className="flex min-h-0 lg:col-span-2">
+          <SectionCard title={current.archive.milestones} className="w-full">
             {archive.milestones.map((m) => (
               <div
                 key={`${m.org.en}-${m.role.en}`}
                 className="rounded-2xl border border-white/10 bg-black/20 p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
+                  <div className="space-y-3">
                     <div className="text-sm font-medium text-fog/90">
                       {m.role[lang]}
                     </div>

@@ -6,4 +6,11 @@ vercel-env.d.ts
 
 # misc
 .DS_Store
+*.tsbuildinfo
+
+# GitHub blocks files > 100MB; use Git LFS or external hosting for these, then remove ignores
+public/gallery/video/Neobody.mp4
+public/gallery/video/Meta-Voice.mp4
+public/gallery/video/Digital Chinese Paper Cutting.mp4
+public/gallery/video/Here, There-I.mp4
 
